@@ -61,7 +61,7 @@ COPY --from=uv /uv /usr/local/bin/uv
 COPY --chown=appuser:appuser --chmod=755 pyproject.toml uv.lock /_lock/
 
 # Ensure caching & install with or without monitoring, depending on flag
-RUN --mount=type=cache,target=/root/.cache <<EOT
+RUN --mount=type=cache,id=root-cache,target=/root/.cache <<EOT
     uv sync \
         --project /_lock \
         --locked \
@@ -116,7 +116,7 @@ FROM runtime AS debug
 # Copy UV binary
 COPY --from=uv /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock /_lock/
-RUN --mount=type=cache,target=/root/.cache <<EOT
+RUN --mount=type=cache,id=root-cache,target=/root/.cache <<EOT
     uv sync \
         --project /_lock \
         --locked \
